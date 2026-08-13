@@ -1,5 +1,5 @@
 # FceCore
-
+[![.NET CI](https://github.com/lishi19990812/FceCore/actions/workflows/dotnet.yml/badge.svg)](https://github.com/lishi19990812/FceCore/actions/workflows/dotnet.yml)
 <p align="center">
   <strong>基于 X.509 证书扩展密钥用法（EKU）的权限控制核心库</strong>
 </p>
