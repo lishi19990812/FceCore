@@ -1,0 +1,40 @@
+# 此工作流用于构建和测试 .NET 项目
+# 更多信息请参阅：https://docs.github.com/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    # 检出代码
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # 设置 .NET SDK
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+        # 开启 NuGet 缓存，加快构建速度（可选）
+        # cache: true
+
+    # 还原依赖
+    - name: Restore dependencies
+      run: dotnet restore
+
+    # 构建项目
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
+    # 运行测试（如果有测试项目的话）
+    - name: Test
+      run: dotnet test --no-build --configuration Release --verbosity normal
