@@ -1,0 +1,48 @@
+加密示例：
+// 假设 cert 是用户的证书
+var data = File.ReadAllBytes("机密文档.txt");
+var recipients = new List<X509Certificate2> { certA, certB }; // 发给 A 和 B
+
+// 调用你的库
+byte[] encryptedData = FceEngine.Encrypt(data, recipients, myCert, 0);
+File.WriteAllBytes("机密文档.fce", encryptedData);
+
+解密示例：
+var fileData = File.ReadAllBytes("机密文档.fce");
+try 
+{
+    byte[] rawdata = FceEngine.Decrypt(fileData, myCert);
+    // 解密成功
+}
+catch (UnauthorizedAccessException ex)
+{
+    // 捕获你定义的权限错误，提示用户证书权限不足
+    Console.WriteLine(ex.Message); // 会提示：需要 FCE解密 + FCE验证
+}
+
+异常提示：
+try
+{
+    byte[] result = FceEngine.Decrypt(fileData, myCert);
+    Console.WriteLine("解密成功！");
+}
+catch (FcePermissionException ex)
+{
+    // 专门处理权限不足的情况
+    Console.WriteLine($"权限错误：你需要 {ex.RequiredPermission}，但证书只有 {ex.ActualPermission}");
+}
+catch (FceFileFormatException ex)
+{
+    // 专门处理文件损坏的情况
+    Console.WriteLine("文件损坏，请重新获取文件。");
+}
+catch (FceCryptographicException ex)
+{
+    // 专门处理密码学错误（签名不对、不是接收者）
+    Console.WriteLine($"解密失败：{ex.Message}");
+}
+catch (Exception ex)
+{
+    // 其他未知错误
+    Console.WriteLine($"未知错误：{ex.Message}");
+}
